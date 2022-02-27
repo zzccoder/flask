@@ -1,4 +1,5 @@
 import unittest
+import xmlrunner
 from app import app
 class TestHello(unittest.TestCase):
     def setUp(self):
@@ -9,4 +10,5 @@ class TestHello(unittest.TestCase):
         self.assertEqual(rv.status, '200 OK')
         self.assertEqual(rv.data, b'Hello World!\n')
 if __name__ == '__main__':
-    unittest.main()
+    runner = xmlrunner.XMLTestRunner(output='test-reports')
+    unittest.main(testRunner=runner)
