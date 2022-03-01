@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  jenkins-master:
+    image: jenkinsci/jenkins:lts-jdk11
+    container_name: jenkins-master
+    environment:
+      - TZ=Asia/Shanghai  # 时区
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home  
+      - /usr/bin/docker:/usr/bin/docker  
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root   # jenkins:0
+    restart: always
