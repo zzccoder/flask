@@ -1,16 +1,7 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM python:3.6
 
-ENV JENKINS_USER admin
-ENV JENKINS_PASS admin
-
-# Skip initial setup
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-
-
-COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
-USER root
-RUN apk add docker
-RUN apk add py-pip
-RUN apk add python-dev libffi-dev openssl-dev gcc libc-dev make
-RUN pip install docker-compose
+WORKDIR .
+RUN pip install --upgrade pip && pip install -i https://mirrors.aliyun.com/pypi/simple -r requirements.txt
+EXPOSE 5000
+CMD ["pip", "install", "-U", "Flask"]
+CMD ["flask","run"]
