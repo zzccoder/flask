@@ -17,14 +17,17 @@ pipeline {
                 }
             }
         }
-        stage('Deploy flash to Dcoekr') {
+        
+        stage('Deploy flask to Dcoekr') {
             steps {
-                container('Dcoker') {
-                    step(echo '')
+                node {
+                    checkout scm
+                    docker.withServer('tcp://localhost:2376'){
+                        docker.image('my-flask-image').withRun('-p 80')
+                    }       
                 }
             }
-        }
-        
+        }       
         
         stage('test') {
             steps {
