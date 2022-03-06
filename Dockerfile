@@ -5,4 +5,4 @@ RUN pip install --upgrade pip && pip install -i https://mirrors.aliyun.com/pypi/
 EXPOSE 5000
 
 CMD ["pip", "install", "-U", "Flask"]
-CMD ["flask","run"]
+#CMD ["flask","run"]

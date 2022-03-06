@@ -1,22 +1,31 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent { 
-        node {
-            label 'flask-pipeline'
-        }
+    agent  { dockerfile true }
     }
 
-
-    stages {
-        stage('My flash image build  and publish') {
+    stages {    
+        stage('Image build  and publish') {
             steps {
-                container("docker image"){
-                sh "docker login --username "zzcdockershiping" --password="0fbb6e33-fe53-44c7-962b-30a5a9a832ae" "
-                sh "docker build  -f `pwd`/Dockerfile -t "zzcdockershiping/myflash" "
+                node {
+                    checkout scm
+                    def customImage = docker.build("my-flask-image:${env.BUILD_ID}")
+                    customImage.inside {
+                        sh 'flask run'
+                    }
+                    customImage.push()
                 }
             }
         }
+        stage('Deploy flash to Dcoekr') {
+            steps {
+                container('Dcoker') {
+                    step(echo '')
+                }
+            }
+        }
+        
+        
         stage('test') {
             steps {
                 sh 'python test.py'
