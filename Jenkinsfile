@@ -1,12 +1,27 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent { docker { image 'python:3.7.2' } }
+    environment{
+        IMAGE_TAG =  sh(returnStdout: true,script: 'echo $image_tag').trim()
+        ORIGIN_REPO =  sh(returnStdout: true,script: 'echo $origin_repo').trim()
+        REPO =  sh(returnStdout: true,script: 'echo $repo').trim()
+        // gitlab revision用于滚动更新镜像
+        REVISION =  sh(returnStdout: true,script: 'echo $revision').trim()
+        PROJECT_NAME = sh(returnStdout: true,script: 'echo $project_name').trim()
+      }
+    agent { 
+        node {
+            label 'flask-pipeline'
+        }
+    }
+
+
     stages {
-        stage('build') {
+        stage('Image build  and publish') {
             steps {
-                sh 'pip install -U Flask'
-                sh 'flask run'
+                container("docker image"){
+                sh "docker build  -f `pwd`/Dockerfile -"
+                }
             }
         }
         stage('test') {
