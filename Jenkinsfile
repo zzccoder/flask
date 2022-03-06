@@ -2,8 +2,7 @@
 
 pipeline {
     agent  { dockerfile true }
-    }
-
+    
     stages {    
         stage('Image build  and publish') {
             steps {
